@@ -1,6 +1,6 @@
 // index.js
 // where your node app starts
-
+let bodyParser = require('body-parser');
 // init project
 require('dotenv').config();
 var express = require('express');
@@ -13,7 +13,8 @@ app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 2
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
-
+// const parserWare = bodyParser.urlencoded({extended: false})
+// app.use(parserWare)
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -23,6 +24,16 @@ app.get('/', function (req, res) {
 app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
+
+app.get('/api/whoami', (req, res) => {
+  res.json({
+    ipaddress: req.socket.remoteAddress,
+    language: req.headers['accept-language'],
+    software: req.headers['user-agent']
+  })
+})
+
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT || 3000, function () {
